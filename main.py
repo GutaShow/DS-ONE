@@ -12,7 +12,7 @@ fundoini=pygame.image.load('img/fundoini.gif') # Fundo da tela inicial
 logocomp=pygame.image.load('img/DS-One_Logo.png') # Logo da tela inicial
 
 # Definicao da janela
-janela=pygame.display.set_mode([1200, 611])
+janela=pygame.display.set_mode([1280, 720]) # Resolucao da Janela
 pygame.display.set_caption('DS-ONE: Multiverso do Caos Acadêmico') # Titulo da janela
 
 # Posicao do jogador
