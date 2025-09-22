@@ -1,4 +1,4 @@
-import pygame
+import pygame, time
 pygame.init()
 
 # Icone Do jogo
@@ -10,6 +10,7 @@ fundo=pygame.image.load('img/fundo.jpg') # Fundo da Fase 1
 player=pygame.image.load('img/nave.png') # Jogador
 fundoini=pygame.image.load('img/fundoini.gif') # Fundo da tela inicial
 logocomp=pygame.image.load('img/DS-One_Logo.png') # Logo da tela inicial
+atenun_boss=pygame.image.load('img/boss_atenun.png')
 
 # Definicao da janela
 janela=pygame.display.set_mode([1280, 720]) # Resolucao da Janela
@@ -18,7 +19,7 @@ pygame.display.set_caption('DS-ONE: Multiverso do Caos Acadêmico') # Titulo da 
 # Posicao do jogador
 pos_yplayer=300 # Cima/Baixo
 pos_xplayer=400 # Esquerda/Direita
-vel_player=0.5 # Velocidade da nave
+vel_player=0.7 # Velocidade da nave
 
 # VARIAVEIS
 game=True
@@ -34,7 +35,7 @@ while game:
                 inicio=False
                 loop=False
     
-    # Loop da tela inicial
+    """# Loop da tela inicial
     while inicio:
         # Botao de fechar a janela
         for events in pygame.event.get():
@@ -47,7 +48,7 @@ while game:
         janela.blit(logocomp, (200, 200))
         
         # Atualizacao da tela
-        pygame.display.update()
+        pygame.display.update()"""
 
 
     # Loop do Jogo
@@ -72,19 +73,22 @@ while game:
         if teclas[pygame.K_RIGHT] or teclas[pygame.K_d]: # Direita
             pos_xplayer+=vel_player 
         
+            
+        
         # Bordas do Jogo
         if pos_yplayer <= -7:
             pos_yplayer=-7
-        if pos_yplayer >= 548:
-            pos_yplayer=548
+        if pos_yplayer >= 660:
+            pos_yplayer=660
         if pos_xplayer <= -20:
             pos_xplayer=-20
-        if pos_xplayer >= 1082:
-            pos_xplayer=1082
+        if pos_xplayer >= 1160:
+            pos_xplayer=1160
                 
         # inserindo imagem na janela      
         janela.blit(fundo, (0, 0))
         janela.blit(player, (pos_xplayer, pos_yplayer))
+        janela.blit(atenun_boss, (800, 100))
         
         
         # Atualizacao da tela
