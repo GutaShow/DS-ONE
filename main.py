@@ -1,4 +1,9 @@
 import pygame
+pygame.init()
+
+# Icone Do jogo
+logo=pygame.image.load('img/DS-One_Logo.png')
+pygame.display.set_icon(logo)
 
 # Definicao da janela
 janela=pygame.display.set_mode([1200, 611])
@@ -13,6 +18,10 @@ vel_player=0.5 # Velocidade da nave
 
 # VARIAVEIS
 loop=True
+
+
+
+
 
 # Loop do Jogo
 while loop:
