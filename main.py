@@ -71,7 +71,7 @@ while game:
         if teclas[pygame.K_LEFT] or teclas[pygame.K_a]: # Esquerda
             pos_xplayer-=vel_player
         if teclas[pygame.K_RIGHT] or teclas[pygame.K_d]: # Direita
-            pos_xplayer+=vel_player 
+            pos_xplayer+=vel_player
         
             
         
