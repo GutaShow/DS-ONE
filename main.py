@@ -41,7 +41,7 @@ boss_rect = boss_img.get_rect(topright=(LARGURA, 0)); tiros_boss = []; EVENTO_TI
 # --- VARIÁVEIS DE DIFICULDADE E PONTUAÇÃO --- 
 # Valores iniciais
 VELOCIDADE_TIRO_INICIAL = 9    # <-- AJUSTADO (era 7)
-PONTOS_POR_SEGUNDO_INICIAL = 5 # <-- AJUSTADO (era 2)
+PONTOS_POR_SEGUNDO_INICIAL = 1 # <-- AJUSTADO (era 2)
 
 # Variáveis que vão mudar durante o jogo
 velocidade_tiro_atual = VELOCIDADE_TIRO_INICIAL
@@ -61,7 +61,7 @@ def reiniciar_jogo():
     pontuacao_atual = 0
     velocidade_tiro_atual = VELOCIDADE_TIRO_INICIAL
     pontos_por_segundo_atual = PONTOS_POR_SEGUNDO_INICIAL
-    proximo_aumento_dificuldade = 20000 # <-- AJUSTADO (era 15000) O primeiro aumento será em 20 segundos
+    proximo_aumento_dificuldade = 60000 # <-- AJUSTADO (era 15000) O primeiro aumento será em 20 segundos
 
 # === VARIÁVEIS DE CONTROLE DO JOGO ===
 game = True; estado_jogo = "tela_inicial"; tela_cheia = False
@@ -112,7 +112,7 @@ while game:
         if teclas[pygame.K_LEFT] or teclas[pygame.K_a]: player_rect.x -= vel_player
         if teclas[pygame.K_RIGHT] or teclas[pygame.K_d]: player_rect.x += vel_player
         player_hitbox.center = player_rect.center
-        if player_rect.top <= 0: player_rect.top = 0;
+        if player_rect.top <= 0: player_rect.top = 0
         if player_rect.bottom >= ALTURA: player_rect.bottom = ALTURA
         if player_rect.left <= 0: player_rect.left = 0
         if player_rect.right >= boss_rect.left: player_rect.right = boss_rect.left
@@ -124,8 +124,8 @@ while game:
         # --- AUMENTO PROGRESSIVO DA DIFICULDADE --- 
         if tempo_sobrevivido >= proximo_aumento_dificuldade:
             velocidade_tiro_atual += 1.5   # <-- AJUSTADO (era 1.2)
-            pontos_por_segundo_atual += 5  # <-- AJUSTADO (era 3)
-            proximo_aumento_dificuldade += 20000 # <-- AJUSTADO (era 15000), próximo aumento em 20s
+            pontos_por_segundo_atual += 1  # <-- AJUSTADO (era 3)
+            proximo_aumento_dificuldade += 60000 # <-- AJUSTADO (era 15000), próximo aumento em 20s
             print(f"DIFICULDADE AUMENTOU! Velocidade Tiro: {velocidade_tiro_atual:.1f}, Pontos/Seg: {pontos_por_segundo_atual}")
         
         pontuacao_atual = int((tempo_sobrevivido / 1000) * pontos_por_segundo_atual)
