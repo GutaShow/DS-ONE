@@ -100,6 +100,7 @@ player_img = carregar_imagem_com_erro('img/nave.png')
 boss_img_original = carregar_imagem_com_erro('img/boss_atenun.png')
 powerup_item_img = carregar_imagem_com_erro('img/powerup_peido.png')
 tiro_peido_img = carregar_imagem_com_erro('img/nuvem_peido.png')
+powerup_pontos_img = carregar_imagem_com_erro('img/hamburguer.png', resize=(50, 50))
 
 # --- Ícones das Conquistas ---
 icon_sobrevivente_base = carregar_imagem_com_erro('img/icon_sobrevivente.png', resize=(64, 64))
@@ -190,7 +191,8 @@ pontuacao_atual = 0
 pontuacao_final = 0
 
 # Variáveis de estado do jogador e itens
-powerups_na_tela = []
+powerups_arma_na_tela = []
+powerups_pontos_na_tela = [] # NOVO
 jogador_tem_arma = False
 tiro_peido_ativo = None
 
@@ -211,7 +213,8 @@ def reiniciar_jogo():
     
     # Limpa as listas de tiros e power-ups
     tiros_boss.clear()
-    powerups_na_tela.clear()
+    powerups_arma_na_tela.clear() 
+    powerups_pontos_na_tela.clear() # NOVO: Limpa a lista do novo power-up
     
     # Zera as variáveis de gameplay
     tempo_inicio_partida = pygame.time.get_ticks()
@@ -290,11 +293,23 @@ while game:
             # Evento customizado para criar power-up
             if event.type == EVENTO_SPAWN_POWERUP:
                 # Só cria um power-up se não houver outro na tela e o jogador não tiver a arma
-                if not powerups_na_tela and not jogador_tem_arma and tiro_peido_ativo is None:
+                if event.type == EVENTO_SPAWN_POWERUP:
                     pos_x = random.randint(100, boss_rect.left - 50)
                     pos_y = random.randint(50, ALTURA - 50)
-                    novo_powerup = powerup_item_img.get_rect(center=(pos_x, pos_y))
-                    powerups_na_tela.append(novo_powerup)
+                
+                # Sorteia aleatoriamente entre 'arma' e 'pontos'
+                tipo_powerup = random.choice(['arma', 'pontos'])
+
+                if tipo_powerup == 'arma':
+                    # Só cria a arma se não houver outra na tela e o jogador não a tiver
+                    if not powerups_arma_na_tela and not jogador_tem_arma and tiro_peido_ativo is None:
+                        novo_powerup = powerup_item_img.get_rect(center=(pos_x, pos_y))
+                        powerups_arma_na_tela.append(novo_powerup)
+                
+                elif tipo_powerup == 'pontos':
+                    # Cria o power-up de pontos
+                    novo_powerup_pontos = powerup_pontos_img.get_rect(center=(pos_x, pos_y))
+                    powerups_pontos_na_tela.append(novo_powerup_pontos)
         
         elif estado_jogo == "game_over":
             if botao_jogar_novamente.foi_clicado(event):
@@ -434,11 +449,17 @@ while game:
         pontuacao_atual = int((tempo_sobrevivido / 1000) * pontos_por_segundo_atual)
         
         # Verifica colisão do jogador com power-ups
-        for powerup_rect in powerups_na_tela[:]:
+        for powerup_rect in powerups_arma_na_tela[:]:
             if player_hitbox.colliderect(powerup_rect):
-                powerups_na_tela.remove(powerup_rect)
+                powerups_arma_na_tela.remove(powerup_rect)
                 jogador_tem_arma = True
-                coletou_powerup_na_partida = True # Marca que pegou um power-up (para a conquista)
+                coletou_powerup_na_partida = True
+
+        # NOVO: Verifica colisão do jogador com power-ups de PONTOS
+        for powerup_pontos_rect in powerups_pontos_na_tela[:]:
+            if player_hitbox.colliderect(powerup_pontos_rect):
+                powerups_pontos_na_tela.remove(powerup_pontos_rect)
+                pontuacao_atual += 30 # Adiciona 30 pontos
 
         # Movimenta o tiro do jogador (se existir)
         if tiro_peido_ativo:
@@ -493,8 +514,12 @@ while game:
         for tiro in tiros_boss:
             pygame.draw.ellipse(janela, AMARELO, tiro)
         
-        for powerup_rect in powerups_na_tela:
+        for powerup_rect in powerups_arma_na_tela:
             janela.blit(powerup_item_img, powerup_rect)
+            
+        # NOVO: Desenha os power-ups de PONTOS na tela
+        for powerup_pontos_rect in powerups_pontos_na_tela:
+            janela.blit(powerup_pontos_img, powerup_pontos_rect)
             
         if tiro_peido_ativo:
             janela.blit(tiro_peido_img, tiro_peido_ativo)
