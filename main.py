@@ -189,6 +189,7 @@ tempo_inicio_partida = 0
 tiros_desviados_total = 0
 pontuacao_atual = 0
 pontuacao_final = 0
+pontuacao_bonus = 0
 
 # Variáveis de estado do jogador e itens
 powerups_arma_na_tela = []
@@ -206,6 +207,7 @@ def reiniciar_jogo():
     global tempo_inicio_partida, pontuacao_atual, velocidade_tiro_atual, pontos_por_segundo_atual
     global proximo_aumento_dificuldade, tiros_desviados_total, jogador_tem_arma, tiro_peido_ativo
     global coletou_powerup_na_partida, chefe_derrotado_na_partida
+    global pontuacao_bonus
 
     # Reseta a posição do jogador
     player_rect.center = (150, ALTURA / 2)
@@ -219,6 +221,7 @@ def reiniciar_jogo():
     # Zera as variáveis de gameplay
     tempo_inicio_partida = pygame.time.get_ticks()
     pontuacao_atual = 0
+    pontuacao_bonus = 0
     velocidade_tiro_atual = VELOCIDADE_TIRO_INICIAL
     pontos_por_segundo_atual = PONTOS_POR_SEGUNDO_INICIAL
     proximo_aumento_dificuldade = 60000
@@ -446,7 +449,8 @@ while game:
             proximo_aumento_dificuldade += 60000 # Próximo aumento em 1 minuto
             
         # Calcula a pontuação
-        pontuacao_atual = int((tempo_sobrevivido / 1000) * pontos_por_segundo_atual)
+        pontuacao_base = int((tempo_sobrevivido / 1000) * pontos_por_segundo_atual)
+        pontuacao_atual = pontuacao_base + pontuacao_bonus # MUDANÇA AQUI
         
         # Verifica colisão do jogador com power-ups
         for powerup_rect in powerups_arma_na_tela[:]:
@@ -458,8 +462,9 @@ while game:
         # NOVO: Verifica colisão do jogador com power-ups de PONTOS
         for powerup_pontos_rect in powerups_pontos_na_tela[:]:
             if player_hitbox.colliderect(powerup_pontos_rect):
+                pontuacao_bonus += 30 # MUDANÇA AQUI
                 powerups_pontos_na_tela.remove(powerup_pontos_rect)
-                pontuacao_atual += 30 # Adiciona 30 pontos
+
 
         # Movimenta o tiro do jogador (se existir)
         if tiro_peido_ativo:
